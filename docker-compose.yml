@@ -1,0 +1,56 @@
+version: "3.7"
+services:
+  code-challenge-golang:
+    build:
+      target: build
+      context: .
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    ports:
+      - 8080:8080
+    command:
+      CompileDaemon -directory="/app" -build="go build -o code-challenge-golang ." -command="/app/code-challenge-golang"
+    networks:
+      - internal-network
+      - dependent-network
+    depends_on:
+      - dependent-server
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+    networks:
+      - internal-network
+    depends_on:
+      - code-challenge-golang
+  dependent-server:
+    build:
+      context: dependent-server
+      target: build
+    environment:
+      - PORT=8090
+    ports:
+      - 8090:8090
+    volumes:
+      - ./dependent-server:/app
+    command:
+      CompileDaemon -directory="/app" -build="go build -o dependent-server ." -command="/app/dependent-server"
+    networks:
+      - dependent-network
+  loadgen-server:
+    build:
+      context: loadgen-server
+    volumes:
+      - ./loadgen-server:/app
+    networks:
+      - internal-network
+    command:
+      python make_requests.py
+
+networks:
+  internal-network:
+  dependent-network:
