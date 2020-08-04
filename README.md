@@ -39,6 +39,8 @@ In the midst of this work, please make an effort to make logical improvements to
    1. Suggestion of how this could be quantified/monitored
 1. Make changes to reduce the failure rate
 1. Suggest and possibly implement structural changes to the code for better maintainability
+1. Discuss how we could operate this service more effectively in production
+   1. What specific things could we do such that we aren't caught off guard by a client bug report
 
 Open main.go for assessing code footpring and editing
 
