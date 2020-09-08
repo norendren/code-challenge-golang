@@ -17,6 +17,7 @@ services:
       - dependent-network
     depends_on:
       - dependent-server
+
   nginx:
     image: nginx:latest
     volumes:
@@ -27,6 +28,7 @@ services:
       - internal-network
     depends_on:
       - code-challenge-golang
+
   dependent-server:
     build:
       context: dependent-server
@@ -41,6 +43,7 @@ services:
       CompileDaemon -directory="/app" -build="go build -o dependent-server ." -command="/app/dependent-server"
     networks:
       - dependent-network
+
   loadgen-server:
     build:
       context: loadgen-server
